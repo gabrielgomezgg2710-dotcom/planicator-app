@@ -38,7 +38,7 @@ export default function History() {
             {history.length} planificación{history.length !== 1 ? 'es' : ''} guardada{history.length !== 1 ? 's' : ''}
           </p>
         </div>
-        <button className="btn btn-primary" onClick={() => navigate('/planning')}>+ Nueva planificación</button>
+        <button className="btn btn-primary" onClick={() => navigate('/planning')} style={{ borderRadius: 100 }}>+ Nueva planificación</button>
       </div>
 
       {history.length === 0 ? (
@@ -109,11 +109,11 @@ export default function History() {
                       {/* Actions */}
                       <div style={{ display: 'flex', gap: 8 }}>
                         <button
-                          className="btn btn-primary btn-sm"
-                          style={{ flex: 1 }}
+                          className="btn btn-gradient btn-sm"
+                          style={{ flex: 1, borderRadius: 100 }}
                           onClick={() => handleLoad(p.id)}
                         >
-                          Cargar en Revisión
+                          Cargar
                         </button>
                         <button
                           className="btn btn-danger btn-sm"

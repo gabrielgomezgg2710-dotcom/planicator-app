@@ -190,7 +190,7 @@ export default function Publish() {
           <div className="empty-state-icon">⬆</div>
           <div className="empty-state-title">Sin planificación activa</div>
           <div className="empty-state-desc">Genera o carga una planificación antes de subir a Trello</div>
-          <button className="btn btn-primary" onClick={() => navigate('/planning')}>Ir a Planificación</button>
+          <button className="btn btn-gradient" onClick={() => navigate('/planning')} style={{ borderRadius: 100 }}>Ir a Planificación</button>
         </div>
       </div>
     );
@@ -293,14 +293,18 @@ export default function Publish() {
       )}
 
       <button
-        className="btn btn-primary btn-lg"
+        className="btn btn-gradient btn-lg"
         onClick={handlePublish}
         disabled={publishing || missingKeys || missingBoard}
-        style={{ opacity: (publishing || missingKeys || missingBoard) ? 0.6 : 1 }}
+        style={{
+          borderRadius: 100,
+          opacity: (publishing || missingKeys || missingBoard) ? 0.6 : 1,
+          cursor: (publishing || missingKeys || missingBoard) ? 'not-allowed' : 'pointer',
+        }}
       >
         {publishing
-          ? <><div className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} /> Publicando...</>
-          : `⬆ Subir a lista "${activePlanning.month}"`
+          ? <><div className="spinner" style={{ width: 16, height: 16, borderWidth: 2, borderColor: 'rgba(255,255,255,0.3)', borderTopColor: '#fff' }} /> Publicando...</>
+          : `Subir a lista "${activePlanning.month}"`
         }
       </button>
     </div>

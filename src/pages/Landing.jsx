@@ -1,15 +1,64 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const ROTATING_WORDS = ['contenido', 'estrategia', 'creatividad', 'resultados', 'campañas'];
+const ROTATING_WORDS = ['copies perfectos', 'guiones de reels', 'briefs para diseño', 'tarjetas en Trello'];
 
 const FEATURES = [
-  { icon: '✦', title: 'Generación con IA', desc: 'Claude AI crea copies, guiones y briefs completos para todo el mes.' },
-  { icon: '◎', title: 'Gestión de clientes', desc: 'Brief permanente por cliente: tono, público, diferenciadores y equipo.' },
-  { icon: '▦', title: 'Calendario visual', desc: 'Vista semanal con edición inline de cada tarjeta de contenido.' },
-  { icon: '⬆', title: 'Subida a Trello', desc: 'Crea todas las tarjetas automáticamente con asignaciones de equipo.' },
-  { icon: '◈', title: 'Historial por cliente', desc: 'Accede y reutiliza cualquier planificación anterior con un clic.' },
-  { icon: '⬡', title: 'Dashboard de agencia', desc: 'Stats, carga del equipo y rendimiento de todas las cuentas.' },
+  {
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+      </svg>
+    ),
+    title: 'Generación con IA',
+    desc: 'Claude AI crea copies, guiones y briefs completos para todo el mes.',
+  },
+  {
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+      </svg>
+    ),
+    title: 'Gestión de clientes',
+    desc: 'Brief permanente por cliente: tono, público, diferenciadores y equipo.',
+  },
+  {
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/>
+      </svg>
+    ),
+    title: 'Calendario visual',
+    desc: 'Vista semanal con edición inline de cada tarjeta de contenido.',
+  },
+  {
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    ),
+    title: 'Subida a Trello',
+    desc: 'Crea todas las tarjetas automáticamente con asignaciones de equipo.',
+  },
+  {
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>
+      </svg>
+    ),
+    title: 'Historial por cliente',
+    desc: 'Accede y reutiliza cualquier planificación anterior con un clic.',
+  },
+  {
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+        <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+      </svg>
+    ),
+    title: 'Dashboard de agencia',
+    desc: 'Stats, carga del equipo y rendimiento de todas las cuentas.',
+  },
 ];
 
 export default function Landing() {
@@ -23,8 +72,8 @@ export default function Landing() {
       setTimeout(() => {
         setWordIdx((i) => (i + 1) % ROTATING_WORDS.length);
         setFade(true);
-      }, 300);
-    }, 2500);
+      }, 280);
+    }, 2600);
     return () => clearInterval(interval);
   }, []);
 
@@ -37,7 +86,7 @@ export default function Landing() {
         padding: '0 48px',
         height: 64,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        background: 'rgba(250,250,250,0.85)',
+        background: 'rgba(250,250,250,0.9)',
         backdropFilter: 'blur(12px)',
         borderBottom: '1px solid var(--color-border)',
       }}>
@@ -51,8 +100,12 @@ export default function Landing() {
           }}>P</div>
           <span style={{ fontSize: 17, fontWeight: 800, letterSpacing: '-0.02em', color: '#0d0d0d' }}>Planicator</span>
         </div>
-        <button className="btn btn-primary" onClick={() => navigate('/dashboard')}>
-          Entrar al Dashboard →
+        <button
+          className="btn btn-primary"
+          onClick={() => navigate('/dashboard')}
+          style={{ borderRadius: 100, padding: '9px 20px', fontSize: 13 }}
+        >
+          Abrir herramienta →
         </button>
       </nav>
 
@@ -64,55 +117,55 @@ export default function Landing() {
         overflow: 'hidden',
         paddingTop: 64,
       }}>
-        {/* Video de fondo: muy desaturado y opaco para que no compita con el texto */}
+        {/* Video fondo */}
         <video
           autoPlay muted loop playsInline
           style={{
             position: 'absolute', inset: 0,
             width: '100%', height: '100%',
             objectFit: 'cover',
-            opacity: 0.12,
+            opacity: 0.15,
             filter: 'grayscale(100%) brightness(1.4)',
           }}
         >
           <source src="/Video_hero.mp4" type="video/mp4" />
         </video>
 
-        {/* Overlay muy sutil para suavizar bordes del video */}
+        {/* Overlay */}
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(to bottom, rgba(250,250,250,0.55) 0%, rgba(250,250,250,0.1) 50%, rgba(250,250,250,0.8) 100%)',
+          background: 'linear-gradient(to bottom, rgba(250,250,250,0.5) 0%, rgba(250,250,250,0.05) 50%, rgba(250,250,250,0.85) 100%)',
           pointerEvents: 'none',
         }} />
 
-        {/* Contenido */}
-        <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 24px', maxWidth: 840 }}>
+        {/* Contenido hero */}
+        <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 24px', maxWidth: 860 }}>
 
-          {/* Pill badge */}
+          {/* Badge */}
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             background: 'var(--color-primary-light)',
             border: '1px solid #c7d2fe',
             borderRadius: 100,
-            padding: '6px 16px',
+            padding: '6px 18px',
             fontSize: 11, fontWeight: 700,
             color: 'var(--color-primary)',
             marginBottom: 36,
             fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.07em',
+            letterSpacing: '0.06em',
             textTransform: 'uppercase',
           }}>
-            ✦ Social Media Planning · Agency Tool
+            ✦ Powered by Claude AI
           </div>
 
           {/* Headline */}
           <h1 style={{
-            fontSize: 'clamp(44px, 7vw, 82px)',
+            fontSize: 'clamp(44px, 7vw, 84px)',
             fontWeight: 800,
             lineHeight: 1.05,
             letterSpacing: '-0.035em',
             color: '#0d0d0d',
-            marginBottom: 20,
+            marginBottom: 22,
           }}>
             Más{' '}
             <span style={{
@@ -122,13 +175,12 @@ export default function Landing() {
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
               opacity: fade ? 1 : 0,
-              transform: fade ? 'translateY(0)' : 'translateY(-10px)',
-              transition: 'opacity 0.28s ease, transform 0.28s ease',
-              minWidth: '230px',
+              transform: fade ? 'translateY(0)' : 'translateY(-8px)',
+              transition: 'opacity 0.25s ease, transform 0.25s ease',
+              minWidth: '310px',
             }}>
               {ROTATING_WORDS[wordIdx]}
             </span>
-            ,<br />menos trabajo manual
           </h1>
 
           {/* Subheadline */}
@@ -145,20 +197,15 @@ export default function Landing() {
 
           {/* CTAs */}
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button className="btn btn-primary btn-lg" onClick={() => navigate('/dashboard')}>
+            <button className="btn btn-primary btn-lg" onClick={() => navigate('/dashboard')} style={{ borderRadius: 100 }}>
               Empezar ahora →
             </button>
             <button
-              className="btn btn-lg"
+              className="btn btn-outline btn-lg"
               onClick={() => navigate('/planning')}
-              style={{
-                background: '#fff',
-                color: '#0d0d0d',
-                border: '1.5px solid var(--color-border)',
-                boxShadow: 'var(--shadow-sm)',
-              }}
+              style={{ borderRadius: 100 }}
             >
-              Ver planificación
+              Ver cómo funciona
             </button>
           </div>
 
@@ -208,7 +255,7 @@ export default function Landing() {
                 key={title}
                 style={{
                   background: '#fafafa',
-                  border: '1px solid var(--color-border)',
+                  border: '1px solid #e8e7e3',
                   borderRadius: 14,
                   padding: '28px 24px',
                   transition: 'all 0.18s ease',
@@ -222,12 +269,12 @@ export default function Landing() {
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = '#fafafa';
-                  e.currentTarget.style.borderColor = 'var(--color-border)';
+                  e.currentTarget.style.borderColor = '#e8e7e3';
                   e.currentTarget.style.transform = 'translateY(0)';
                   e.currentTarget.style.boxShadow = 'none';
                 }}
               >
-                <div style={{ fontSize: 20, marginBottom: 14, color: 'var(--color-primary)' }}>{icon}</div>
+                <div style={{ marginBottom: 14, color: 'var(--color-primary)' }}>{icon}</div>
                 <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 8, color: '#0d0d0d' }}>{title}</div>
                 <div style={{ fontSize: 14, color: '#71717a', lineHeight: 1.65 }}>{desc}</div>
               </div>
@@ -257,7 +304,11 @@ export default function Landing() {
           <p style={{ color: '#71717a', fontSize: 15, marginBottom: 28, lineHeight: 1.7 }}>
             Tu equipo va a agradecer las horas que les ahorras.
           </p>
-          <button className="btn btn-primary btn-lg" onClick={() => navigate('/dashboard')}>
+          <button
+            className="btn btn-gradient btn-lg"
+            onClick={() => navigate('/dashboard')}
+            style={{ borderRadius: 100 }}
+          >
             Abrir Planicator →
           </button>
         </div>

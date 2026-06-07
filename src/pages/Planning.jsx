@@ -389,14 +389,18 @@ export default function Planning() {
 
       <div style={{ display: 'flex', gap: 14, alignItems: 'center', marginBottom: rawError ? 16 : 0 }}>
         <button
-          className="btn btn-primary btn-lg"
+          className="btn btn-gradient btn-lg"
           onClick={handleGenerate}
           disabled={loading || !clientId || !claudeApiKey}
-          style={{ opacity: (loading || !clientId || !claudeApiKey) ? 0.6 : 1, cursor: (loading || !clientId || !claudeApiKey) ? 'not-allowed' : 'pointer' }}
+          style={{
+            borderRadius: 100,
+            opacity: (loading || !clientId || !claudeApiKey) ? 0.6 : 1,
+            cursor: (loading || !clientId || !claudeApiKey) ? 'not-allowed' : 'pointer',
+          }}
         >
           {loading
-            ? <><div className="spinner" style={{ width: 16, height: 16, borderWidth: 2 }} /> Generando...</>
-            : '✦ Generar planificación con IA'
+            ? <><div className="spinner" style={{ width: 16, height: 16, borderWidth: 2, borderColor: 'rgba(255,255,255,0.3)', borderTopColor: '#fff' }} /> Generando...</>
+            : '✨ Generar planificación con Claude'
           }
         </button>
         {loading && progress && (

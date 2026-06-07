@@ -379,7 +379,7 @@ export default function Review() {
           <div className="empty-state-icon">▦</div>
           <div className="empty-state-title">Sin planificación activa</div>
           <div className="empty-state-desc">Genera una planificación primero desde la sección de Planificación</div>
-          <button className="btn btn-primary" onClick={() => navigate('/planning')}>Ir a Planificación</button>
+          <button className="btn btn-gradient" onClick={() => navigate('/planning')} style={{ borderRadius: 100 }}>Ir a Planificación</button>
         </div>
       </div>
     );
@@ -455,7 +455,7 @@ export default function Review() {
             </button>
           )}
 
-          <button className="btn btn-primary" onClick={() => navigate('/publish')}>⬆ Subir a Trello</button>
+          <button className="btn btn-gradient" onClick={() => navigate('/publish')} style={{ borderRadius: 100 }}>Subir a Trello</button>
         </div>
       </div>
 

@@ -322,7 +322,7 @@ export default function Clients() {
           <h1 className="page-title">Clientes</h1>
           <p className="page-subtitle">{clients.length} cliente{clients.length !== 1 ? 's' : ''} registrado{clients.length !== 1 ? 's' : ''}</p>
         </div>
-        <button className="btn btn-primary" onClick={() => { setEditing(null); setShowModal(true); }}>
+        <button className="btn btn-primary" onClick={() => { setEditing(null); setShowModal(true); }} style={{ borderRadius: 100 }}>
           + Nuevo cliente
         </button>
       </div>

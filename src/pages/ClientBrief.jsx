@@ -93,11 +93,11 @@ export default function ClientBrief() {
                 )}
               </div>
               <button
-                className="btn btn-primary btn-sm"
+                className="btn btn-gradient btn-sm"
                 onClick={() => navigate('/planning', { state: { clientId: client.id } })}
-                style={{ flexShrink: 0 }}
+                style={{ flexShrink: 0, borderRadius: 100 }}
               >
-                ✦ Planificar
+                + Planificar
               </button>
             </div>
 

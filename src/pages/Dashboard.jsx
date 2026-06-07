@@ -83,7 +83,7 @@ export default function Dashboard() {
           <h1 className="page-title">Dashboard</h1>
           <p className="page-subtitle">Vista general de tu agencia</p>
         </div>
-        <button className="btn btn-primary" onClick={() => navigate('/planning')}>
+        <button className="btn btn-gradient" onClick={() => navigate('/planning')} style={{ borderRadius: 100 }}>
           + Nueva planificación
         </button>
       </div>
@@ -144,7 +144,7 @@ export default function Dashboard() {
               <div style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', marginBottom: 20 }}>
                 Crea una nueva planificación mensual con IA
               </div>
-              <button className="btn btn-primary" onClick={() => navigate('/planning')}>
+              <button className="btn btn-gradient" onClick={() => navigate('/planning')} style={{ borderRadius: 100 }}>
                 Crear planificación
               </button>
             </div>
