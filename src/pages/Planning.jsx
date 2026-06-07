@@ -12,6 +12,27 @@ const POST_TYPES = [
   { id: 'story', label: 'Story', icon: '◻' },
 ];
 
+/* ── JSON sanitizer — escapes literal newlines inside string values ── */
+function sanitizeJsonStrings(json) {
+  let result = '', inString = false, i = 0;
+  while (i < json.length) {
+    const c = json[i];
+    if (inString) {
+      if (c === '\\') { result += c + (json[i + 1] ?? ''); i += 2; continue; }
+      else if (c === '"') { inString = false; result += c; }
+      else if (c === '\n') { result += '\\n'; }
+      else if (c === '\r') { result += '\\r'; }
+      else if (c === '\t') { result += '\\t'; }
+      else { result += c; }
+    } else {
+      if (c === '"') inString = true;
+      result += c;
+    }
+    i++;
+  }
+  return result;
+}
+
 /* ── Date helpers ─────────────────────────────────────────────── */
 
 function getPostingDates(monthName, year) {
@@ -142,8 +163,8 @@ export default function Planning() {
     setProgress('Conectando con Claude AI...');
 
     const requestBody = {
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 8000,
+      model: 'claude-sonnet-4-6',
+      max_tokens: 16000,
       messages: [{ role: 'user', content: buildPrompt(client, month, year, topics.trim(), distribution) }],
     };
 
@@ -152,30 +173,41 @@ export default function Planning() {
     try {
       setProgress('Generando contenido... (30-60 seg)');
 
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch('/api/claude', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': claudeApiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody),
       });
 
-      console.log('[Planicator] Response status:', res.status);
-
       if (!res.ok) {
         const errBody = await res.json().catch(() => ({}));
-        console.error('[Planicator] API error body:', errBody);
         throw new Error(errBody.error?.message || `HTTP ${res.status}`);
       }
 
-      const data = await res.json();
-      console.log('[Planicator] Full API response:', data);
+      // Read SSE stream from proxy (buffered to handle lines split across chunks)
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let text = '';
+      let buffer = '';
 
-      const text = data.content?.[0]?.text || '';
-      console.log('[Planicator] Raw text from Claude:', text);
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop(); // keep incomplete last line
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const data = line.slice(6).trim();
+          if (data === '[DONE]') continue;
+          try {
+            const event = JSON.parse(data);
+            if (event.type === 'content_block_delta' && event.delta?.type === 'text_delta') {
+              text += event.delta.text;
+            }
+          } catch {}
+        }
+      }
 
       setProgress('Procesando respuesta...');
 
@@ -202,7 +234,7 @@ export default function Planning() {
 
       let parsed;
       try {
-        parsed = JSON.parse(jsonStr);
+        parsed = JSON.parse(sanitizeJsonStrings(jsonStr));
         console.log('[Planicator] Parsed posts:', parsed.posts?.length);
       } catch (parseErr) {
         console.error('[Planicator] JSON.parse error:', parseErr.message);
@@ -267,7 +299,7 @@ export default function Planning() {
       {/* Client & Month */}
       <div className="card" style={{ marginBottom: 20 }}>
         <div style={{ fontWeight: 700, fontSize: 'var(--text-md)', marginBottom: 16 }}>Cliente y período</div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 100px', gap: 16, marginBottom: 16 }}>
+        <div className="planning-period-grid">
           <div className="input-group">
             <label className="input-label">Cliente</label>
             <select className="input-field" value={clientId} onChange={(e) => setClientId(e.target.value)}>
@@ -356,7 +388,7 @@ export default function Planning() {
           <div style={{ fontWeight: 700, fontSize: 'var(--text-md)' }}>Distribución de contenido</div>
           <span className="badge badge-primary">{totalPosts} posts totales</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
+        <div className="distribution-grid">
           {POST_TYPES.map(({ id, label, icon }) => (
             <div key={id} style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
