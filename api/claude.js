@@ -27,6 +27,8 @@ export default async function handler(request) {
       });
     }
 
+    // Non-streaming call — avoids SSE piping issues in serverless
+    const { stream, ...bodyWithoutStream } = body;
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -34,24 +36,14 @@ export default async function handler(request) {
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
       },
-      body: JSON.stringify({ ...body, stream: true }),
+      body: JSON.stringify(bodyWithoutStream),
     });
 
-    if (!response.ok) {
-      const errData = await response.json().catch(() => ({}));
-      return new Response(JSON.stringify(errData), {
-        status: response.status,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-      });
-    }
+    const data = await response.json();
 
-    return new Response(response.body, {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'Access-Control-Allow-Origin': '*',
-      },
+    return new Response(JSON.stringify(data), {
+      status: response.status,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
     });
   } catch (err) {
     return new Response(JSON.stringify({ error: { message: err.message } }), {
