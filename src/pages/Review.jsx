@@ -149,7 +149,6 @@ const normalizeSlide = (s) => {
 };
 
 function EditModal({ post, onClose, onSave }) {
-  const claudeApiKey = useStore((s) => s.claudeApiKey);
   const [form, setForm] = useState({
     ...post,
     slides: (post.slides || []).map(normalizeSlide),
@@ -163,7 +162,6 @@ function EditModal({ post, onClose, onSave }) {
 
   const handleAiAdjust = async () => {
     if (!aiInstruction.trim()) return;
-    if (!claudeApiKey) { setAiError('Configura tu API key de Claude en Ajustes'); return; }
 
     setAiLoading(true);
     setAiError('');
@@ -192,14 +190,9 @@ Responde con JSON puro (sin markdown ni bloques de código):
 IMPORTANTE: "newContent" contiene SOLO el cuerpo de la sección, no el encabezado.`;
 
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch('/api/claude', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': claudeApiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-haiku-4-5-20251001',
           max_tokens: 1024,
@@ -212,8 +205,27 @@ IMPORTANTE: "newContent" contiene SOLO el cuerpo de la sección, no el encabezad
         throw new Error(err.error?.message || `HTTP ${res.status}`);
       }
 
-      const data = await res.json();
-      const text = data.content?.[0]?.text || '';
+      // Read SSE stream
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let text = '';
+      let buffer = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const d = line.slice(6).trim();
+          if (d === '[DONE]') continue;
+          try {
+            const ev = JSON.parse(d);
+            if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta') text += ev.delta.text;
+          } catch {}
+        }
+      }
 
       let jsonStr = null;
       const md = text.match(/```(?:json)?\s*([\s\S]*?)```/);

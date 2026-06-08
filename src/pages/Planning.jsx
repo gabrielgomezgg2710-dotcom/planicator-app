@@ -138,7 +138,7 @@ Responde SOLO con JSON puro, sin markdown. "title" = título del post (4-6 palab
 export default function Planning() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { clients, claudeApiKey, setActivePlanning, addToast } = useStore();
+  const { clients, setActivePlanning, addToast } = useStore();
 
   const now = new Date();
   const [clientId, setClientId] = useState(location.state?.clientId || (clients[0]?.id || ''));
@@ -155,7 +155,6 @@ export default function Planning() {
 
   const handleGenerate = async () => {
     if (!client) return addToast({ type: 'error', message: 'Selecciona un cliente' });
-    if (!claudeApiKey) return addToast({ type: 'error', message: 'Configura tu API key de Claude en Ajustes', title: 'API Key requerida' });
     if (!topics.trim()) return addToast({ type: 'error', message: 'Escribe al menos un tema del mes' });
 
     setLoading(true);
@@ -283,18 +282,6 @@ export default function Planning() {
         <p className="page-subtitle">Claude AI genera todo el contenido del mes</p>
       </div>
 
-      {!claudeApiKey && (
-        <div style={{
-          background: 'var(--color-warning-light)', border: '1px solid #fde68a',
-          borderRadius: 'var(--radius-md)', padding: '12px 16px', marginBottom: 24,
-          display: 'flex', alignItems: 'center', gap: 10, fontSize: 'var(--text-sm)',
-        }}>
-          <span>⚠</span>
-          <span>Necesitas configurar tu <strong>API Key de Claude</strong> antes de generar.{' '}
-            <button className="btn btn-ghost btn-sm" onClick={() => navigate('/settings')} style={{ padding: '2px 8px', fontSize: 12 }}>Configurar →</button>
-          </span>
-        </div>
-      )}
 
       {/* Client & Month */}
       <div className="card" style={{ marginBottom: 20 }}>
@@ -423,11 +410,11 @@ export default function Planning() {
         <button
           className="btn btn-gradient btn-lg"
           onClick={handleGenerate}
-          disabled={loading || !clientId || !claudeApiKey}
+          disabled={loading || !clientId}
           style={{
             borderRadius: 100,
-            opacity: (loading || !clientId || !claudeApiKey) ? 0.6 : 1,
-            cursor: (loading || !clientId || !claudeApiKey) ? 'not-allowed' : 'pointer',
+            opacity: (loading || !clientId) ? 0.6 : 1,
+            cursor: (loading || !clientId) ? 'not-allowed' : 'pointer',
           }}
         >
           {loading
