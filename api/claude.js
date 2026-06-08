@@ -27,7 +27,6 @@ export default async function handler(request) {
       });
     }
 
-    const { stream, ...bodyWithoutStream } = body;
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -35,14 +34,24 @@ export default async function handler(request) {
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
       },
-      body: JSON.stringify(bodyWithoutStream),
+      body: JSON.stringify({ ...body, stream: true }),
     });
 
-    const data = await response.json();
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      return new Response(JSON.stringify(errData), {
+        status: response.status,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      });
+    }
 
-    return new Response(JSON.stringify(data), {
-      status: response.status,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+    return new Response(response.body, {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Access-Control-Allow-Origin': '*',
+      },
     });
   } catch (err) {
     return new Response(JSON.stringify({ error: { message: err.message } }), {

@@ -178,12 +178,35 @@ export default function Planning() {
         body: JSON.stringify(requestBody),
       });
 
-      const resData = await res.json().catch(() => ({}));
       if (!res.ok) {
-        throw new Error(resData.error?.message || `HTTP ${res.status}`);
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(errBody.error?.message || `HTTP ${res.status}`);
       }
 
-      const text = resData.content?.[0]?.text || '';
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let text = '';
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const data = line.slice(6).trim();
+          if (data === '[DONE]') continue;
+          try {
+            const event = JSON.parse(data);
+            if (event.type === 'content_block_delta' && event.delta?.type === 'text_delta') {
+              text += event.delta.text;
+            }
+          } catch {}
+        }
+      }
+
       setProgress('Procesando respuesta...');
 
       // Extract JSON: try markdown code block first, then bare object
