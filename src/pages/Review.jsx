@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useStore from '../store/useStore';
 import Modal from '../components/Modal';
+import { exportPDF } from '../utils/exportPDF';
 
 const TYPE_ICONS  = { carousel: '▦', reel: '▷', static: '□', story: '◻' };
 const TYPE_LABELS = { carousel: 'Carrusel', reel: 'Reel', static: 'Estático', story: 'Story' };
@@ -378,6 +379,7 @@ export default function Review() {
   const [selectedPost,  setSelectedPost]  = useState(null);
   const [filterType,    setFilterType]    = useState('all');
   const [filterStatus,  setFilterStatus]  = useState('all');
+  const [pdfLoading,    setPdfLoading]    = useState(false);
 
   // DnD
   const [draggingId,    setDraggingId]    = useState(null);
@@ -467,6 +469,18 @@ export default function Review() {
             </button>
           )}
 
+          <button
+            className="btn btn-secondary"
+            disabled={pdfLoading}
+            onClick={async () => {
+              setPdfLoading(true);
+              await new Promise(r => setTimeout(r, 50));
+              try { exportPDF(activePlanning); } catch (e) { addToast({ type: 'error', message: 'Error al generar PDF' }); }
+              setPdfLoading(false);
+            }}
+          >
+            {pdfLoading ? '⏳ Generando...' : '📄 Exportar PDF'}
+          </button>
           <button className="btn btn-gradient" onClick={() => navigate('/publish')} style={{ borderRadius: 100 }}>Subir a Trello</button>
         </div>
       </div>
