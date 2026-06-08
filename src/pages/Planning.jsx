@@ -122,7 +122,7 @@ BRIEF: [colores, estilo]
 ━━ JSON ━━
 Responde SOLO con JSON puro, sin markdown. "title" = 4-6 palabras. Sé CONCISO en cada campo.
 
-{"posts":[{"id":"post_1","week":1,"type":"static","title":"Bienvenidos a junio","copy":"COPY:\\n💊 Tu salud es nuestra prioridad.\\nEn Farmacia Santa Rosa tenemos todo.\\n¿Nos visitas hoy? 🤝\\n\\nHASHTAGS:\\n#FarmaciaSantaRosa #Salud #Barquisimeto #Farmacia #Bienestar #Medicamentos #TuFarmacia\\n\\nTITULAR:\\nTu salud, nuestra misión\\n\\nPÁRRAFO:\\nMedicamentos de calidad al mejor precio de la ciudad\\n\\nBRIEF DISEÑADOR:\\nFondo blanco, tipografía Montserrat Bold, foto de farmacéutico atendiendo, logo arriba derecha, borde verde #2ECC71","assignedTo":"gabrielgomez96","platform":"instagram","status":"pending"}]}`;
+{"posts":[{"id":"post_1","week":1,"type":"static","title":"Lanzamos algo increíble","copy":"COPY:\\n🚀 Llegó el momento.\\nConócelo hoy. ¡No te lo pierdas!\\nHASHTAGS:\\n#Marca #Lanzamiento #Tech #SaaS #2026\\nBRIEF:\\nFondo blanco, tipografía bold, logo arriba derecha","assignedTo":"","platform":"instagram","status":"pending"}]}`;
 }
 
 export default function Planning() {
@@ -153,7 +153,7 @@ export default function Planning() {
 
     const requestBody = {
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 2000,
+      max_tokens: 2500,
       messages: [{ role: 'user', content: buildPrompt(client, month, year, topics.trim(), distribution) }],
     };
 
