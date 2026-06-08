@@ -201,31 +201,9 @@ IMPORTANTE: "newContent" contiene SOLO el cuerpo de la sección, no el encabezad
         }),
       });
 
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error?.message || `HTTP ${res.status}`);
-      }
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let text = '';
-      let buffer = '';
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop();
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          const d = line.slice(6).trim();
-          if (d === '[DONE]') continue;
-          try {
-            const ev = JSON.parse(d);
-            if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta') text += ev.delta.text;
-          } catch {}
-        }
-      }
+      const resData = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(resData.error?.message || `HTTP ${res.status}`);
+      const text = resData.content?.[0]?.text || '';
 
       let jsonStr = null;
       const md = text.match(/```(?:json)?\s*([\s\S]*?)```/);
