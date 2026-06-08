@@ -163,7 +163,7 @@ export default function Planning() {
 
     const requestBody = {
       model: 'claude-sonnet-4-6',
-      max_tokens: 32000,
+      max_tokens: 16000,
       messages: [{ role: 'user', content: buildPrompt(client, month, year, topics.trim(), distribution) }],
     };
 
