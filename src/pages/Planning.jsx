@@ -163,7 +163,7 @@ export default function Planning() {
 
     const requestBody = {
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 16000,
+      max_tokens: 6000,
       messages: [{ role: 'user', content: buildPrompt(client, month, year, topics.trim(), distribution) }],
     };
 
