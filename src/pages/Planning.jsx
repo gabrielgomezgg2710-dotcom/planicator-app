@@ -100,37 +100,27 @@ EQUIPO: ${teamStr || 'Sin asignar'}
 DISTRIBUCIÓN (genera EXACTAMENTE):
 Posts estáticos: ${distribution.static} | Carruseles: ${distribution.carousel} | Reels: ${distribution.reel} | Stories: ${distribution.story} | TOTAL: ${total}
 
-━━ REGLAS DEL CAMPO "copy" ━━
+━━ REGLAS DEL CAMPO "copy" ━━ (MUY CONCISO)
 
-El campo "copy" contiene TODO el contenido del post. Usa este formato según el tipo:
+TYPE static/story → copy:
+COPY: [2 líneas + CTA]
+HASHTAGS: [5 hashtags]
+BRIEF: [colores, imagen]
 
-TYPE static o story → copy debe tener:
-COPY: [3 líneas con emojis y CTA]
-HASHTAGS: [7 hashtags]
-TITULAR: [máx 6 palabras para el diseño]
-PÁRRAFO: [máx 12 palabras de apoyo para el diseño]
-BRIEF DISEÑADOR: [colores hex, tipo de imagen, composición, logo]
+TYPE reel → copy:
+COPY: [2 líneas + CTA]
+HASHTAGS: [5 hashtags]
+VOZ: [30 palabras]
+BRIEF: [tomas, música]
 
-TYPE reel → copy debe tener:
-COPY: [3 líneas con emojis y CTA]
-HASHTAGS: [7 hashtags]
-VOZ EN OFF: [guión 60-80 palabras, listo para leer]
-OVERLAYS: 1.[texto] 2.[texto] 3.[texto] 4.[texto]
-BRIEF EDITOR: [tomas en orden, duración clips, música, ritmo]
-
-TYPE carousel → copy debe tener:
-COPY: [3 líneas con emojis y CTA]
-HASHTAGS: [7 hashtags]
-PORTADA: [título portada máx 6 palabras]
-SLIDE 2: [título] | [texto 1-2 oraciones]
-SLIDE 3: [título] | [texto 1-2 oraciones]
-SLIDE 4: [título] | [texto 1-2 oraciones]
-SLIDE 5: [título] | [texto 1-2 oraciones]
-SLIDE FINAL: [CTA + contacto WhatsApp]
-BRIEF DISEÑADOR: [colores hex, estilo, composición por slide]
+TYPE carousel → copy:
+COPY: [2 líneas + CTA]
+HASHTAGS: [5 hashtags]
+SLIDES: P:[portada] | S2:[texto] | S3:[texto] | S4:[texto] | SF:[CTA]
+BRIEF: [colores, estilo]
 
 ━━ JSON ━━
-Responde SOLO con JSON puro, sin markdown. "title" = título del post (4-6 palabras, NUNCA vacío). "copy" = todo el contenido según formato arriba.
+Responde SOLO con JSON puro, sin markdown. "title" = 4-6 palabras. Sé CONCISO en cada campo.
 
 {"posts":[{"id":"post_1","week":1,"type":"static","title":"Bienvenidos a junio","copy":"COPY:\\n💊 Tu salud es nuestra prioridad.\\nEn Farmacia Santa Rosa tenemos todo.\\n¿Nos visitas hoy? 🤝\\n\\nHASHTAGS:\\n#FarmaciaSantaRosa #Salud #Barquisimeto #Farmacia #Bienestar #Medicamentos #TuFarmacia\\n\\nTITULAR:\\nTu salud, nuestra misión\\n\\nPÁRRAFO:\\nMedicamentos de calidad al mejor precio de la ciudad\\n\\nBRIEF DISEÑADOR:\\nFondo blanco, tipografía Montserrat Bold, foto de farmacéutico atendiendo, logo arriba derecha, borde verde #2ECC71","assignedTo":"gabrielgomez96","platform":"instagram","status":"pending"}]}`;
 }
@@ -163,7 +153,7 @@ export default function Planning() {
 
     const requestBody = {
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 6000,
+      max_tokens: 2000,
       messages: [{ role: 'user', content: buildPrompt(client, month, year, topics.trim(), distribution) }],
     };
 
