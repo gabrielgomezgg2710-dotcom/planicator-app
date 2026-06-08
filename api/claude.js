@@ -1,4 +1,4 @@
-export const maxDuration = 60;
+export const config = { runtime: 'edge' };
 
 export default async function handler(request) {
   if (request.method === 'OPTIONS') {
@@ -27,7 +27,6 @@ export default async function handler(request) {
       });
     }
 
-    // Non-streaming call — avoids SSE piping issues in serverless
     const { stream, ...bodyWithoutStream } = body;
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
